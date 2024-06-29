@@ -687,7 +687,7 @@ describe('socket.io', () => {
 			await socketUser.reset.send({ uid: 0 }, 'regular@test.com');
 			const [count, eventsData] = await Promise.all([
 				db.sortedSetCount('reset:issueDate', 0, Date.now()),
-				events.getEvents('', 0, 0),
+				events.getEvents({ filter: '', start: 0, stop: 0 }),
 			]);
 			assert.strictEqual(count, 2);
 
@@ -705,7 +705,7 @@ describe('socket.io', () => {
 			);
 			const [count, eventsData] = await Promise.all([
 				db.sortedSetCount('reset:issueDate', 0, Date.now()),
-				events.getEvents('', 0, 0),
+				events.getEvents({ filter: '', start: 0, stop: 0 }),
 			]);
 			assert.strictEqual(count, 2);
 
@@ -740,7 +740,7 @@ describe('socket.io', () => {
 
 	it('should toggle caches', async () => {
 		const caches = {
-			post: require('../src/posts/cache'),
+			post: require('../src/posts/cache').getOrCreate(),
 			object: require('../src/database').objectCache,
 			group: require('../src/groups').cache,
 			local: require('../src/cache'),
